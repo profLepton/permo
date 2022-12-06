@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <table>
+        <tr valign="top">
+            <td><img src="{{ user.avatar(128) }}"></td>
+            <td>
+                <h1>{{user.firstName}} {{user.lastName}}</h1>
+                <h3>@{{ user.username }}</h3>
+                <h3>{{ user.location }}</h3>
+                {% if user.about_me %}<p>{{ user.about_me }}</p>{% endif %}
+                {% if user.last_seen %}<p>Last seen on: {{ user.last_seen }}</p>{% endif %}
+            </td>
+        </tr>
+        {% if user == current_user %}
+                <p><a href="{{ url_for('edit_profile') }}">Edit your profile</a></p>
+        {% endif %}
+    </table>
+    ...
+    {% if not current_user.is_professor and user.is_professor %}
+    <table>
+        <tr valign="top"> <h2>Courses offered </h2> </tr>
+        
+        {% for course in courses %}
+        <tr>
+            <td>
+                <p>{{ course.course_name }}</p> 
+                <a href="{{ url_for('make_request', class_id = course.id) }}"><button>Request a Permission Number</button></a>
+            </td>
+        </tr>
+        {% endfor %}
+        </tr>
+
+        
+    </table>
+    {% endif %}
+
+{% endblock %}

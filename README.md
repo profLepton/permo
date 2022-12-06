@@ -1,2 +1,2 @@
 # permo
-Permission Number Management system for Universities.
+ Efficient Permission number manager

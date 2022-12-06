@@ -1,0 +1,86 @@
+{% if current_user.is_professor %}
+
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <h2>Permisson numbers available: {{  stats[0] }} / {{ stats[1] }}</h2>    
+    <table>
+
+        <tr>
+            <form action="{{ url_for('add_numbers', class_id=class_id) }}" method="post">
+                {{ form1.hidden_tag() }}
+            <td> 
+                {{ form1.permission_numbers}}
+                {% for error in form1.permission_numbers.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+
+            </td>
+            <td>
+                {{ form1.submit(value="Save Numbers")}}
+            </td>
+        </form>
+        </tr>
+    </table>
+
+    <h2>Pending</h2>
+    <table>
+        {% for pn_request in pn_requests %}
+        {% if not pn_request[1].status %}
+        <tr>
+        <td>
+            <h3> {{pn_request[0] }} </h3>
+            <h3> <a href="{{ url_for('user', username=pn_request[2]) }}">@{{ pn_request[2]}}</a> </h3>
+             <h3> {{ pn_request[1].date }} </h3>
+             <h3> Message from the student: </h3>
+             <p>{{ pn_request[1].message }}</p>
+             Status : {{ pn_request[1].status }}
+        </td> 
+        <td>
+                <form action="{{ url_for('request_approve', request_id=pn_request[1].id) }}" method="post">
+                    {{ form.hidden_tag() }}
+                    {{ form.submit(value='Approve') }}
+                </form>
+            
+                <form action="{{ url_for('request_decline', request_id=pn_request[1].id) }}" method="post">
+                    {{ form.hidden_tag() }}
+                    {{ form.submit(value='Decline') }}
+                </form>
+            </td> 
+            </tr>
+        {% endif %} 
+        {% endfor %}
+       
+    </table>
+    <table>
+    <hr>
+    <h2>Approved</h2>
+    {% for pn_request in pn_requests %}
+    {% if pn_request[1].status %}
+    <tr>
+    <td>
+        <h3> {{pn_request[0] }} </h3>
+        <h3> <a href="{{ url_for('user', username=pn_request[2]) }}">@{{ pn_request[2]}}</a> </h3>
+         <h3> {{ pn_request[1].date }} </h3>
+         Status : {{ pn_request[1].status }}
+         <h3> number: {{ pn_request[1].permission_number }}</h3>
+    </td> 
+    <td>
+        <form action="{{ url_for('request_decline', request_id=pn_request[1].id) }}" method="post">
+            {{ form.hidden_tag() }}
+            {{ form.submit(value='Decline') }}
+        </form>
+    </td>
+    </tr>
+    {% endif %}
+    {% endfor %}
+    </table>
+
+{% endblock %}
+
+{% else %}
+
+<h1> You do not have permission to view this screen. </h1>
+
+{% endif %}

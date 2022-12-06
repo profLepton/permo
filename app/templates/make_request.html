@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+    {% if pn_requests | length() != 0   %}
+        <h1> You already have made a request </h1>
+        {% for request in pn_requests %}
+            <p> Request date : {{ request.date }} </p>
+        {% endfor %}
+    {% else %}
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        <p>
+            
+            {{ form.message.label }}:<br>
+            {{ form.message }}<br>
+            {% for error in form.message.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>{{ form.submit() }}</p>
+    </form>
+    {% endif %}
+{% endblock %}

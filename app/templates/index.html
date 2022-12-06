@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block content %}
+    {% if not current_user.is_anonymous %} 
+    <h1>Hi, {{ current_user.firstName }} {{ current_user.lastName }}!</h1>
+    {% if current_user.is_professor %}
+       
+    <p><a href="{{ url_for('add_class') }} "><button>Add Class</button></a></p>
+    
+
+    {% for class in classes %}
+    <p>
+        <a href="{{ url_for('manage_class', class_id=class.id) }} "><h3> {{ class.course_name }} </a></h3> 
+    </p>
+
+    {% endfor %}
+    {% else %}
+    <h3>Approved Requests</h3>
+    {% for prequest in p_requests %}
+        {% if prequest.status %}
+        <p> <h3> {{ prequest.class_name }} </h3></p>
+        <p> <h3> {{ prequest.date }} </h3></p>
+        <h3>Message sent to professor:</h3> 
+        <p> {{ prequest.message }}</p>
+        <p> Status : {{ prequest.status }} </p>
+        <p> <h3> {{ prequest.permission_number }} </h3></p>
+        {% endif %}
+    {% endfor %}
+    <hr>
+    <h3>Pending Requests</h3>
+    {% for prequest in p_requests %}
+    {% if not prequest.status %}
+        <p> <h3> {{ prequest.class_name }} </h3></p>
+        <p> <h3> {{ prequest.date }} </h3></p>
+        <h3>Message sent to professor:</h3> 
+        <p> {{ prequest.message }}</p>
+        <p> Status : {{ prequest.status }} </p>
+        {% endif %}
+    {% endfor %}
+    {% endif %}
+    {% else %} 
+    <div>
+        <h1>Welcome to Permo! </h1>
+        <p><a href="{{ url_for('login') }}"><button>LOGIN</button></a></p>
+    </div>
+    {% endif %}
+
+{% endblock %}
